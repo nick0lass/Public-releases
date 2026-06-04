@@ -1,6 +1,6 @@
 # Forefront Public Security Releases
 
-Public security research write-ups from [Forefront IT Security Services](https://forefrontitsecurityservices.co.uk), published after coordinated disclosure and CVE assignment.
+Public security research write-ups from [Forefront IT Security Services](https://forefrontitsecurityservices.co.uk/blog/breaking-secure-exam-app), published after coordinated disclosure and CVE assignment.
 
 Research by **Nicholas Ineson**, Director of Forefront IT Security Services, and **Mick Dunne**, Independent Researcher.
 

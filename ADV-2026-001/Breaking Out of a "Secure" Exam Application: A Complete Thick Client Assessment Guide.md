@@ -59,13 +59,13 @@
 
 This research was carried out by **Nicholas Ineson**, Director of Forefront IT Security Services, and **Mick Dunne**, Independent Researcher. Together we identified and submitted six CVEs (CVE-2026-36487 to CVE-2026-36492) for the desktop exam proctoring application examined below.
 
-Recently, we conducted independent security research on a desktop exam application used by professional certification bodies, universities, and government organisations worldwide. The application is marketed as providing "secure computer lockdown" that prevents candidates from accessing external resources during proctored exams.
+Recently, we conducted independent security research on the TestReach Desktop Application (v6.2.0 and earlier), used by professional certification bodies, universities, and government organisations worldwide. The application is marketed as providing "secure computer lockdown" that prevents candidates from accessing external resources during proctored exams.
 
-The vendor claims ISO 27001 certification, "proven technologies to prevent cheating," and serves clients including medical certification bodies and government organisations. The application is distributed as an MSI installer and works alongside live video proctoring, a human proctor watches the candidate via webcam and screen share while the desktop app enforces technical lockdown.
+TestReach claims ISO 27001 certification, "proven technologies to prevent cheating," and serves clients including medical certification bodies and government organisations. The application is distributed as an MSI installer and works alongside live video proctoring, a human proctor watches the candidate via webcam and screen share while the desktop app enforces technical lockdown.
 
 What we found was that every security control could be defeated with minimal effort, requiring no specialist tools and no administrator privileges. The server had zero visibility into whether the client had been tampered with.
 
-We initiated responsible disclosure with the vendor on 18 February 2026 and set a public disclosure target of 19 May 2026 (a 90-day coordinated disclosure window). The vendor did not respond. Six CVE identifiers, CVE-2026-36487 through CVE-2026-36492, have since been assigned for these findings and are listed in the Findings Summary. The product and vendor name are intentionally withheld from this methodology write-up.
+We initiated responsible disclosure with the vendor on 18 February 2026 and set a public disclosure target of 19 May 2026 (a 90-day coordinated disclosure window). The vendor did not respond. Six CVE identifiers, CVE-2026-36487 through CVE-2026-36492, have since been assigned for these findings and are listed in the Findings Summary. Vendor: TestReach. Affected product: TestReach Desktop Application v6.2.0 and earlier.
 
 ---
 
@@ -82,7 +82,7 @@ The first step is understanding the application structure.
 After installing the application via the MSI, we navigated to the installation directory:
 
 ```powershell
-cd "C:\Users\[USER]\AppData\Local\Programs\[VENDOR]\resources"
+cd "C:\Users\[USER]\AppData\Local\Programs\TestReach\resources"
 dir
 ```
 
@@ -235,7 +235,7 @@ cat app_extracted\package.json
 
 ```json
 {
-  "name": "[REDACTED]",
+  "name": "TestReach",
   "version": "6.2.0",
   "main": "main.js",
   "org": "",
@@ -302,7 +302,7 @@ Electron has defaulted these to secure values for years. This application active
 **Critical Finding: Kiosk Mode Implementation**
 
 ```javascript
-ipcMain.on('[vendor]-kiosk-on', (event, arg) => {
+ipcMain.on('testreach-kiosk-on', (event, arg) => {
   if (process.platform === 'win32') {
     toggleKioskMode(true);
   }
@@ -640,7 +640,7 @@ Since `ignore-certificate-errors` is set, any proxy tool works without additiona
 
 ```powershell
 # Launch the app through Burp proxy
-& "[APP_PATH][VENDOR].exe" --proxy-server=127.0.0.1:8080
+& "[APP_PATH]TestReach.exe" --proxy-server=127.0.0.1:8080
 ```
 
 With Burp listening on port 8080, every API call flows through the proxy, authentication, configuration, exam content loading, answer submission. Zero certificate errors because the application accepts any certificate unconditionally.
